@@ -1,0 +1,65 @@
+To complete the lab tasks involving Snort (an Intrusion Detection System or IDS) and nmap (a port scanner), follow these steps:
+
+**Step 1: Understand the Purpose of the Lab**
+- The purpose of this lab is to learn about port scanning and intrusion detection systems.
+- You will use two virtual machines, and one of them will have Snort (IDS) installed.
+- The other machine will use nmap for port scanning.
+
+**Step 2: Host Configuration**
+- Make sure both hosts have been configured with IP addresses. Note these IP addresses.
+- You can check the IP addresses using the `ifconfig` command.
+- Verify connectivity between both hosts using the `ping` command.
+
+**Step 3: Testing Snort**
+- Validate that Snort is working on VM1.
+- Open a terminal on VM1 and run the following command:
+
+   ```bash
+   sudo snort -i 3 -c /etc/snort/snort.conf -T
+   ```
+
+- You should see a series of messages, including "Snort successfully validated the configuration!"
+
+**Step 4: Add a Rule to Detect Pings**
+- Edit the Snort config file to add a local rule. Use your preferred text editor or `gedit`:
+
+   ```bash
+   sudo gedit /etc/snort/rules/local.rules
+   ```
+
+- Add the following line to detect ICMP (ping) traffic:
+
+   ```
+   alert icmp any any -> any any (msg:"ICMP"; sid:1000001;)
+   ```
+
+- This rule will detect and report pings. Save the file.
+
+- Run Snort in intrusion detection mode reporting all exceptions to the console:
+
+   ```bash
+   sudo snort -c /etc/snort/snort.conf -A console
+   ```
+
+- From VM2, ping VM1. You should see a notification of the pings in the Snort console.
+
+**Step 5: Testing the IDS with Common Attacks**
+- Use nmap from VM2 to perform a port scan on VM1. Replace `ipaddress` with the IP address of VM1:
+
+   ```bash
+   nmap -system-dns -v -A ipaddress
+   ```
+
+- Observe the information shown in the nmap output.
+
+- Check the Snort console to see what messages Snort generated as a result of the port scan.
+- You can use Wireshark to identify some of these messages.
+
+- Perform a tunnelling attack using the hts and htc commands as previously learned and see if Snort detects the tunnelling of telnet through port 80.
+
+**Step 6: Assessment of the Lab**
+- Show your instructor that you have Snort running and have carried out the attacks as listed.
+
+- Be prepared to answer the instructor's questions, such as explaining what port scanning and intrusion detection are, why port scanning is a threat, and whether Snort detected the attacks.
+
+This lab helps you understand the capabilities and limitations of intrusion detection systems like Snort and their role in securing networks.
